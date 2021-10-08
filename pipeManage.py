@@ -17,7 +17,7 @@ class pipeManager():
                 
                 # 额外的处理函数
                 if self.funServerRead:
-                    self.funServerRead(data)
+                    self.funServerRead(data[1])
             print("pipeReadThread Disconnect.")
             win32pipe.DisconnectNamedPipe(self.pipe)
         else:
@@ -30,7 +30,7 @@ class pipeManager():
                 
                 # 额外的处理函数
                 if self.funClientRead:
-                    self.funClientRead(data)
+                    self.funClientRead(data[1])
             print("pipeReadThread CloseHandle.")
             win32file.CloseHandle(file_handle)
                     

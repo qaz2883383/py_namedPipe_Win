@@ -2,9 +2,10 @@ import pipeManage as pm
 import time
 
 def fun(data):
-    pass
+    if '3' in data.decode():
+        print("fun: found 3")
 
-p = pm.pipeManager(asServer=False)
+p = pm.pipeManager(asServer=False, funClientRead=fun)
 
 for i in range(10):
     print("print" + str(i))

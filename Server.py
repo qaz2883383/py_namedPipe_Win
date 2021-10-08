@@ -2,9 +2,10 @@ import pipeManage as pm
 import time
 
 def fun(data):
-    pass
+    if '5' in data.decode():
+        print("fun: found 5")
 
-p = pm.pipeManager(asServer=True)
+p = pm.pipeManager(asServer=True, funServerRead=fun)
 
 for i in range(10):
     print("print" + str(i+100))
