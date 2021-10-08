@@ -7,6 +7,23 @@ PIPE_BUFFER_SIZE = 65535
 
 
 class pipeManager():
+    def serverWaitThread(self):
+        if self.pipeRead:
+            win32pipe.ConnectNamedPipe(self.pipeRead, None)
+            self.isActive = True
+            self.threadRead = threading.Thread(target=self.pipeReadThread)
+            self.threadRead.start()
+        else:
+            self.isActive = False
+            print("Pipe Init: Fail Creating Pipe")
+            
+        if self.pipeWrite:
+            win32pipe.ConnectNamedPipe(self.pipeWrite, None)
+            self.writeAllow = True
+        else:
+            self.writeAllow = False
+            print("Pipe Init: Fail Creating Pipe")
+
     def pipeReadThread(self):
         if self.isServer:
             while self.isActive:
@@ -66,22 +83,8 @@ class pipeManager():
                                            win32pipe.PIPE_UNLIMITED_INSTANCES,
                                            PIPE_BUFFER_SIZE,
                                            PIPE_BUFFER_SIZE, 500, None)
-            
-            if self.pipeRead:
-                win32pipe.ConnectNamedPipe(self.pipeRead, None)
-                self.isActive = True
-                self.threadRead = threading.Thread(target=self.pipeReadThread)
-                self.threadRead.start()
-            else:
-                self.isActive = False
-                print("Pipe Init: Fail Creating Pipe")
-                
-            if self.pipeWrite:
-                win32pipe.ConnectNamedPipe(self.pipeWrite, None)
-                self.writeAllow = True
-            else:
-                self.writeAllow = False
-                print("Pipe Init: Fail Creating Pipe")
+            self.serverWaitThread = threading.Thread(target=self.serverWaitThread)
+            self.serverWaitThread.start()
         else:
             self.pipeReadName = PIPE_NAME + pipeName + '_w'
             self.pipeWriteName = PIPE_NAME + pipeName + '_r'
